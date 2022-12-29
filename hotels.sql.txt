@@ -1,0 +1,89 @@
+CREATE table if  not exists mentors  (
+  id        	SERIAL PRIMARY KEY,
+  name      	VARCHAR(50) NOT NULL,
+  address   	VARCHAR(120) not null,
+  statment_date smallint not null,
+  Pro_Lan 		varchar(30)
+);
+
+insert into mentors (name, address, statment_date, pro_lan)
+values('mark', 'zagreb', 3 , 'HTML'),
+	  ('lana', 'zagreb', 6 , 'HTML'),
+      ('carlos', 'zagreb', 4 , 'CSS'),
+      ('kalo', 'barcelona', 2 , 'JS'),
+      ('markos', 'zagreb', 3 , 'REACT');
+     
+     
+
+
+create table if not exists students(
+	id      serial primary key,
+	name    varchar(50) not null,
+	address  varchar(120) not null,
+	graduated boolean
+);
+
+insert into students (name , address , graduated) 
+values ('oda', 'barcelona', true),
+	('lola', 'barcelona', true),
+	('show', 'zagreb', false),
+	('bola', 'london', false),
+	('mola', 'barcelona', false),
+	('hola', 'barcelona', true),
+	('ola', 'barcelona', false),
+	('beba', 'barcelona', true),
+	('kola', 'barcelona', true),
+	('cola', 'barcelona', true);
+
+create table if not exists classes(
+	id 			serial primary key,
+	mentor_id 	int references mentors(id),
+	topic 		varchar(60),
+	taught_date date not null,
+	location 	varchar(60)
+);
+
+create table if not exists classes_attendace (
+	id 			serial primary key,
+	student_id	int references students(id),
+	class_id  	int references classes(id)
+);
+insert into classes (mentor_id , taught_date) 
+values (1, '2022-12-17');
+insert into classes (mentor_id , taught_date) 
+values (2, '2022-12-17');
+insert into classes (mentor_id , taught_date , topic) 
+values (1, '2022-12-16', 'JS');
+
+
+insert into classes_attendace (student_id, class_id) values(5 , 5);
+insert into classes_attendace (student_id, class_id) values(4 , 5);
+insert into classes_attendace (student_id, class_id) values(3 , 5);
+insert into classes_attendace (student_id, class_id) values(2 , 5);
+
+select * from mentors;
+select * from students limit 5;
+select * from students where graduated= true limit 3;
+select *from students where name like 'm%' limit 2;
+
+select s.name from classes_attendace as ca
+join students  as s 
+on ca.student_id  = s.id 
+where  s."name" like 'm%' limit 5;
+
+-- students who joined the class of 16 dec
+
+select s.name from students as s
+join classes_attendace as ca 
+on s.id =ca.student_id 
+join classes as c 
+on c.id =ca.class_id 
+where c.taught_date = '2022-12-17';
+
+-- select mentor liver more than 5 years
+
+select * from mentors as m 
+where statment_date > 5;
+
+select * from mentors as m 
+where m.pro_lan ='HTML';
